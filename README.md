@@ -128,11 +128,11 @@ public class OrderProcessor {
 
 - Use Strategy Pattern:
 
-```java
+
 public interface PaymentStrategy {
     void pay();
 }
-```
+
 
 Inject concrete strategy like `CreditCardPayment`, `PayPalPayment`, etc.
 
