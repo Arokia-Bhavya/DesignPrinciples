@@ -162,10 +162,10 @@ Inject concrete strategy like `CreditCardPayment`, `PayPalPayment`, etc.
 
 - Split interfaces:
 
-```java
+
 interface Validatable { void validate(); }
 interface Refundable { void refund(); }
-```
+
 
 Only implement what is needed.
 
@@ -181,15 +181,15 @@ Only implement what is needed.
 
 - Depend on abstraction:
 
-```java
+
 public interface Notifier {
     void sendConfirmation();
 }
-```
+
 
 - Inject via constructor:
 
-```java
+
 public class OrderProcessor {
     private final Notifier notifier;
 
@@ -197,7 +197,7 @@ public class OrderProcessor {
         this.notifier = notifier;
     }
 }
-```
+
 
 ---
 
