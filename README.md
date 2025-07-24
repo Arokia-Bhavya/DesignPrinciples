@@ -1,4 +1,4 @@
-# SOLID Violations in OrderProcessor
+# SOLID
 
 ## Overview
 
@@ -9,74 +9,13 @@ This README analyzes how the original `OrderProcessor` class violates each of th
 ## Original Code (with Violations)
 
 ```java
-// Interface with too many responsibilities (ISP Violation)
-interface OrderActions {
-    void process();
-    void refund();
-    void returnOrder();
-    void validate();
-    void sendConfirmation();
-}
-
-// Abstract base class for payment (LSP Violation with CODPayment)
-abstract class PaymentMode {
-    abstract void pay();
-}
-
-// Concrete payment that works fine
-class CreditCardPayment extends PaymentMode {
-    @Override
-    void pay() {
-        System.out.println("Processing credit card...");
-    }
-}
-
-// LSP Violation: Subclass violates the expected contract
-class CODPayment extends PaymentMode {
-    @Override
-    void pay() {
-        throw new UnsupportedOperationException("COD payment not supported");
-    }
-}
-
-// ISP Violation: Forced to implement unsupported methods
-class DigitalOrderActions implements OrderActions {
-    public void process() {
-        System.out.println("Processing digital order...");
-    }
-
-    public void refund() {
-        System.out.println("Refunding digital order...");
-    }
-
-    public void returnOrder() {
-        throw new UnsupportedOperationException("Return not supported for digital products");
-    }
-
-    public void validate() {
-        System.out.println("Validating digital order...");
-    }
-
-    public void sendConfirmation() {
-        System.out.println("Sending confirmation email...");
-    }
-}
-
-// DIP Violation: Depends directly on concrete implementation
-class EmailSender {
-    public void sendConfirmation() {
-        System.out.println("Sending confirmation email...");
-    }
-}
-
-// SRP, OCP, LSP, ISP, DIP violations all in one place
 public class OrderProcessor {
     public void processOrder(String itemType, String paymentMode) {
-        // SRP Violation: Multiple responsibilities
+        // 1. SRP Violation: Too many responsibilities
         System.out.println("Validating order...");
         System.out.println("Saving order to database...");
 
-        // OCP Violation: Hardcoded payment logic
+        // 2. OCP Violation: Can't add new payment methods without modifying
         if (paymentMode.equals("credit")) {
             System.out.println("Processing credit card...");
         } else if (paymentMode.equals("paypal")) {
@@ -92,11 +31,12 @@ public class OrderProcessor {
         actions.process();
         actions.returnOrder(); // Throws exception
 
-        // DIP Violation: Directly dependent on a concrete class
+        // 5. DIP Violation: Direct dependency on concrete logic
         EmailSender emailSender = new EmailSender();
         emailSender.sendConfirmation();
     }
-}```
+}
+```
 
 ---
 
@@ -128,11 +68,11 @@ public class OrderProcessor {
 
 - Use Strategy Pattern:
 
-
+```java
 public interface PaymentStrategy {
     void pay();
 }
-
+```
 
 Inject concrete strategy like `CreditCardPayment`, `PayPalPayment`, etc.
 
@@ -162,10 +102,10 @@ Inject concrete strategy like `CreditCardPayment`, `PayPalPayment`, etc.
 
 - Split interfaces:
 
-
+```java
 interface Validatable { void validate(); }
 interface Refundable { void refund(); }
-
+```
 
 Only implement what is needed.
 
@@ -181,15 +121,15 @@ Only implement what is needed.
 
 - Depend on abstraction:
 
-
+```java
 public interface Notifier {
     void sendConfirmation();
 }
-
+```
 
 - Inject via constructor:
 
-
+```java
 public class OrderProcessor {
     private final Notifier notifier;
 
@@ -197,9 +137,6 @@ public class OrderProcessor {
         this.notifier = notifier;
     }
 }
-
+```
 
 ---
-
-
-
