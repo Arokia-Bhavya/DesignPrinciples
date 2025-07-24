@@ -1,4 +1,4 @@
-# SOLID Violations in OrderProcessor - README
+# SOLID Violations in OrderProcessor
 
 ## Overview
 
