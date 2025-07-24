@@ -23,8 +23,13 @@ public class OrderProcessor {
         }
 
         // 3. LSP Violation: Would break if PaymentMode subclasses misbehaved
+        PaymentMode payment = new CODPayment();
+        payment.pay(); // This will throw exception — violates LSP
 
-        // 4. ISP Violation: Suppose we had a giant interface OrderActions with many unused methods
+        // 4. ISP Violation: Using interface with unneeded methods
+        OrderActions actions = new DigitalOrderActions();
+        actions.process();
+        actions.returnOrder(); // Not supported, but still required to implement
 
         // 5. DIP Violation: Direct dependency on concrete logic
         EmailSender emailSender = new EmailSender();
@@ -136,11 +141,5 @@ public class OrderProcessor {
 
 ---
 
-## Summary for Interviews
 
-> "In my initial OrderProcessor, I noticed it violated SRP by mixing validation, payment, persistence, and notification. It also violated OCP since new payment types required changing existing logic. LSP was broken because subclasses like CODPayment couldn’t substitute safely. ISP was violated by bloated interfaces, and DIP was broken by hardcoding dependencies. I refactored the code using strategy pattern, dependency injection, and interface segregation to make it modular, extensible, and testable."
-
----
-
-Let me know if you'd like the refactored code version or visual class diagrams to complement this!
 
