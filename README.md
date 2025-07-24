@@ -140,3 +140,30 @@ public class OrderProcessor {
 ```
 
 ---
+
+## Refactored Code (SOLID Compliant)
+
+```java
+public class OrderProcessor {
+    private final OrderValidator validator;
+    private final OrderRepository repository;
+    private final Notifier notifier;
+
+    public OrderProcessor(OrderValidator validator, OrderRepository repository, Notifier notifier) {
+        this.validator = validator;
+        this.repository = repository;
+        this.notifier = notifier;
+    }
+
+    public void processOrder(String itemType, PaymentStrategy paymentStrategy) {
+        validator.validate(itemType);
+        repository.save(itemType);
+        paymentStrategy.pay();
+        notifier.sendConfirmation();
+    }
+}
+```
+
+---
+
+
